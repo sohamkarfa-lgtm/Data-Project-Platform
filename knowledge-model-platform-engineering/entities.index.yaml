@@ -1,0 +1,52 @@
+# Registry of every entity in this repo.
+
+repo: knowledge-model-platform-engineering
+parent_repo: https://github.com/sohamkarfa-lgtm/Data-Project-Accelerator
+parent_index: entities.index.yaml
+
+entities:
+  - id: PLAT-LZ-0001
+    title: "Azure and Fabric landing zone"
+    domain: landing-zone
+    status: draft
+    path: domains/landing-zone/PLAT-LZ-0001.md
+  - id: PLAT-COMP-0001
+    title: "Fabric capacity and workspace model"
+    domain: compute
+    status: draft
+    path: domains/compute/PLAT-COMP-0001.md
+  - id: PLAT-STOR-0001
+    title: "ADLS Gen2 medallion storage layout"
+    domain: storage
+    status: draft
+    path: domains/storage/PLAT-STOR-0001.md
+  - id: PLAT-NET-0001
+    title: "Private platform connectivity"
+    domain: network
+    status: draft
+    path: domains/network/PLAT-NET-0001.md
+  - id: PLAT-SEC-0001
+    title: "Entra ID platform access model"
+    domain: identity-security
+    status: draft
+    path: domains/identity-security/PLAT-SEC-0001.md
+  - id: PLAT-OPS-0001
+    title: "Platform cost and operations controls"
+    domain: operations
+    status: draft
+    path: domains/operations/PLAT-OPS-0001.md
+  - id: PLAT-ADR-0001
+    title: "Fabric capacity sizing and scaling posture"
+    domain: adr
+    status: draft
+    path: adr/PLAT-ADR-0001.md
+  - id: PLAT-ADR-0002
+    title: "Private network and coexistence connectivity topology"
+    domain: adr
+    status: draft
+    path: adr/PLAT-ADR-0002.md
+  - id: PLAT-ADR-0003
+    title: "Entra ID group-to-role access model"
+    domain: adr
+    status: draft
+    path: adr/PLAT-ADR-0003.md
