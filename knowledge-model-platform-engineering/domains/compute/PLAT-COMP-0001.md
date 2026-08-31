@@ -2,7 +2,7 @@
 id: PLAT-COMP-0001
 domain: compute
 type: platform-design
-status: draft
+status: validated
 owner: platform-engineering
 relates_to: [PARENT-REQ-0001, PARENT-TS-0001, PARENT-ADR-0002, PARENT-DEL-0004]
 source: "Platform design proposal; approved by human on 2026-08-28"
@@ -15,17 +15,16 @@ Use Microsoft Fabric capacity as the analytics compute layer with independently
 scalable capacity and ADLS Gen2 storage.
 
 ## Recommendation
-Start with the smallest capacity tier that satisfies the agreed Milestone 1
-workload. Scale using observed workload, refresh-window, and concurrency metrics.
-Use separate development, test, and production workspaces with controlled
-promotion.
+Start with a smaller Fabric capacity tier sized to the Milestone 1 profile and
+scale using observed workload, concurrency, and refresh-window metrics. Keep
+separate development, test, and production workspaces and use controlled
+promotion. Apply the validated budget guardrail of $10,000-$14,000/month for
+Fabric plus adjacent services, with dev/test capped separately at
+$2,000/month and an 80%-of-ceiling Finance alert.
 
 ## Best-practice basis
 WAF Performance Efficiency and Cost Optimization through measured right-sizing;
 CAF workload and environment separation.
 
 ## Open items
-- [NEEDS HUMAN INPUT: expected data volume]
-- [NEEDS HUMAN INPUT: concurrent user count]
-- [NEEDS HUMAN INPUT: workload concurrency and refresh windows]
-- [NEEDS HUMAN INPUT: Milestone 1 capacity budget]
+- None. Capacity sizing and budget inputs were supplied and validated.

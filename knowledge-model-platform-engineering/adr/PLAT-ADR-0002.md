@@ -2,7 +2,7 @@
 id: PLAT-ADR-0002
 domain: adr
 type: decision
-status: draft
+status: validated
 owner: platform-engineering
 relates_to: [PLAT-LZ-0001, PLAT-NET-0001, PARENT-ADR-0001, PARENT-REQ-0003, PARENT-DEL-0001]
 source: "Platform design proposal; approved by human on 2026-08-28"

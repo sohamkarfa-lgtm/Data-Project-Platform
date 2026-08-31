@@ -2,7 +2,7 @@
 id: PLAT-NET-0001
 domain: network
 type: platform-design
-status: draft
+status: validated
 owner: platform-engineering
 relates_to: [PARENT-ADR-0001, PARENT-TS-0001, PARENT-REQ-0003, PARENT-GOV-0001, PARENT-DEL-0004]
 source: "Platform design proposal; approved by human on 2026-08-28"
@@ -15,17 +15,15 @@ Provide private-by-default platform connectivity while preserving secure access
 to on-premises systems during incremental coexistence.
 
 ## Recommendation
-Use private endpoints for ADLS Gen2 and other sensitive dependencies where
-supported. Restrict public network access, apply subnet and service-boundary
-security controls, and centrally manage private DNS zones. Use approved secure
-connectivity for on-premises data flows.
+Use a dedicated peered spoke VNet inside the existing hub-spoke model. Keep the
+platform private-by-default, with private endpoints for sensitive services and
+centrally managed private DNS zones under the network team’s governance. Use
+the existing ExpressRoute circuit for on-premises coexistence and restrict all
+public access to explicitly approved exceptions only.
 
 ## Best-practice basis
 CAF network topology and private connectivity patterns; WAF Security defense in
 depth.
 
 ## Open items
-- [NEEDS HUMAN INPUT: existing Azure virtual network and hub connectivity]
-- [NEEDS HUMAN INPUT: on-premises connectivity method]
-- [NEEDS HUMAN INPUT: approved egress and firewall policy]
-- [NEEDS HUMAN INPUT: public-access exceptions]
+- None. Existing topology, connectivity method, and approval posture were supplied and validated.
