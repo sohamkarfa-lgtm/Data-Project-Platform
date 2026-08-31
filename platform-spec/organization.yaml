@@ -1,0 +1,69 @@
+apiVersion: platform.data-project.io/v1alpha1
+kind: FabricPlatformOrg
+metadata:
+  organization: "[NEEDS HUMAN INPUT: organization name]"
+  project: "Data Project Platform"
+shared:
+  region: "[NEEDS HUMAN INPUT: Azure region]"
+  managementGroup: "Data-Analytics"
+  subscriptions:
+    dev: "[NEEDS HUMAN INPUT: dev subscription name or id]"
+    test: "[NEEDS HUMAN INPUT: test subscription name or id]"
+    prod: "[NEEDS HUMAN INPUT: prod subscription name or id]"
+  namingConvention: "[NEEDS HUMAN INPUT: naming convention]"
+  taggingPolicy:
+    requiredTags:
+      - environment
+      - workload
+      - cost center
+      - data classification
+  identityProvider: "Microsoft Entra ID"
+  network:
+    topology: "hub-spoke with dedicated peered spoke VNet"
+    dnsOwner: "central network team"
+    connectivity: "existing ExpressRoute circuit for on-premises coexistence; no new VPN required"
+approvedEntities:
+  - id: PLAT-LZ-0001
+    status: validated
+  - id: PLAT-COMP-0001
+    status: validated
+  - id: PLAT-STOR-0001
+    status: validated
+  - id: PLAT-NET-0001
+    status: validated
+  - id: PLAT-SEC-0001
+    status: validated
+  - id: PLAT-OPS-0001
+    status: validated
+  - id: PLAT-ADR-0001
+    status: validated
+  - id: PLAT-ADR-0002
+    status: validated
+  - id: PLAT-ADR-0003
+    status: validated
+  - id: PLAT-ADR-0004
+    status: validated
+approval:
+  decisionIds:
+    - PLAT-ADR-0001
+    - PLAT-ADR-0002
+    - PLAT-ADR-0003
+    - PLAT-ADR-0004
+  approvedBy: "[NEEDS HUMAN INPUT: named approver]"
+  approvedAt: "2026-08-31"
+unresolvedInputs:
+  - field: metadata.organization
+    marker: "[NEEDS HUMAN INPUT: organization name]"
+    reason: "No organization name in scoped platform sources."
+  - field: shared.region
+    marker: "[NEEDS HUMAN INPUT: Azure region]"
+    reason: "Sources state single-region only, not a concrete Azure region."
+  - field: shared.subscriptions
+    marker: "[NEEDS HUMAN INPUT: subscription names or ids]"
+    reason: "Separate dev/test/prod subscriptions are approved, but names or IDs are not stated."
+  - field: shared.namingConvention
+    marker: "[NEEDS HUMAN INPUT: naming convention]"
+    reason: "Required naming dimensions are stated, but no exact convention is defined."
+  - field: approval.approvedBy
+    marker: "[NEEDS HUMAN INPUT: named approver]"
+    reason: "Sources say approved by human but do not name the approver."

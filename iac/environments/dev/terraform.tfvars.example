@@ -1,0 +1,62 @@
+subscription_id = "00000000-0000-0000-0000-000000000000"
+tenant_id       = "00000000-0000-0000-0000-000000000000"
+location        = "westeurope"
+
+project_short_name  = "dp"
+workload_name       = "data-platform"
+cost_center         = "cc-data-platform"
+data_classification = "internal"
+
+management_group_id                        = "/providers/Microsoft.Management/managementGroups/Data-Analytics"
+associate_subscription_to_management_group = false
+
+hub_virtual_network_id = null
+
+private_dns_zone_ids = {
+  blob  = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-network-dns/providers/Microsoft.Network/privateDnsZones/privatelink.blob.core.windows.net"
+  dfs   = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-network-dns/providers/Microsoft.Network/privateDnsZones/privatelink.dfs.core.windows.net"
+  vault = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-network-dns/providers/Microsoft.Network/privateDnsZones/privatelink.vaultcore.azure.net"
+}
+
+storage_replication_type = "LRS"
+
+fabric_capacity_sku_name = "F32"
+fabric_capacity_administration_members = [
+  "platform-admin@mnc.example",
+  "11111111-1111-1111-1111-111111111111"
+]
+
+fabric_workspaces = {
+  core = {
+    name        = "fw-dp-dev-core"
+    purpose     = "development workspace for controlled promotion"
+    domain      = "platform"
+    description = "Microsoft Fabric development workspace for the data platform."
+  }
+}
+
+fabric_workspace_rbac_assignments = {
+  platform_admins = {
+    workspace_key  = "core"
+    principal_id   = "22222222-2222-2222-2222-222222222222"
+    principal_type = "Group"
+    role           = "Admin"
+  }
+  platform_developers = {
+    workspace_key  = "core"
+    principal_id   = "33333333-3333-3333-3333-333333333333"
+    principal_type = "Group"
+    role           = "Contributor"
+  }
+}
+
+monitoring_email_receivers = {
+  platform_ops = "platform-ops@mnc.example"
+}
+
+monthly_budget_amount = 2000
+budget_contact_emails = ["finance-controller@mnc.example"]
+
+tags = {
+  managed_by = "terraform"
+}

@@ -1,0 +1,93 @@
+apiVersion: platform.data-project.io/v1alpha1
+kind: FabricPlatform
+metadata:
+  projectId: "Data-Project-Platform"
+  environment: prod
+  approvedEntities:
+    - id: PLAT-LZ-0001
+      status: validated
+    - id: PLAT-COMP-0001
+      status: validated
+    - id: PLAT-STOR-0001
+      status: validated
+    - id: PLAT-NET-0001
+      status: validated
+    - id: PLAT-SEC-0001
+      status: validated
+    - id: PLAT-OPS-0001
+      status: validated
+    - id: PLAT-ADR-0001
+      status: validated
+    - id: PLAT-ADR-0002
+      status: validated
+    - id: PLAT-ADR-0003
+      status: validated
+    - id: PLAT-ADR-0004
+      status: validated
+platform:
+  region: "[NEEDS HUMAN INPUT: Azure region]"
+  capacity:
+    mode: "Microsoft Fabric capacity"
+    sku: "[NEEDS HUMAN INPUT: capacity SKU]"
+    capacityId: "[NEEDS HUMAN INPUT: prod capacity id]"
+  workspaces:
+    - name: "[NEEDS HUMAN INPUT: prod workspace name]"
+      purpose: "production workspace for controlled promotion"
+      capacityRef: "[NEEDS HUMAN INPUT: prod capacity reference]"
+      domain: "[NEEDS HUMAN INPUT: workspace domain]"
+  storage:
+    type: "ADLS Gen2"
+    zones:
+      - name: bronze
+        retention: "90 days hot, then 1 year archive, then delete"
+      - name: silver
+        retention: "2 years"
+      - name: gold
+        retention: "7 years for Finance; 3 years for all other domains"
+    redundancy: "[NEEDS HUMAN INPUT: ADLS Gen2 redundancy SKU]"
+  network:
+    posture: "private-by-default"
+    publicAccess: "explicitly approved exceptions only"
+  identity:
+    authentication: "Microsoft Entra ID"
+    assignments:
+      - groupRef: "DA-Platform-Admins"
+        role: administrator
+      - groupRef: "DA-Platform-Developers"
+        role: developer
+      - groupRef: "DA-Finance-Readers"
+        role: consumer
+      - groupRef: "DA-Sales-Readers"
+        role: consumer
+      - groupRef: "[NEEDS HUMAN INPUT: operator group]"
+        role: operator
+approval:
+  decisionIds:
+    - PLAT-ADR-0001
+    - PLAT-ADR-0002
+    - PLAT-ADR-0003
+    - PLAT-ADR-0004
+  approvedBy: "[NEEDS HUMAN INPUT: named approver]"
+  approvedAt: "2026-08-31"
+unresolvedInputs:
+  - field: platform.region
+    marker: "[NEEDS HUMAN INPUT: Azure region]"
+    reason: "Single-region deployment is stated, concrete region is not."
+  - field: platform.capacity.sku
+    marker: "[NEEDS HUMAN INPUT: capacity SKU]"
+    reason: "Source states smaller/F32-F64-class range, not a selected SKU."
+  - field: platform.capacity.capacityId
+    marker: "[NEEDS HUMAN INPUT: prod capacity id]"
+    reason: "Capacity ID is not stated."
+  - field: platform.workspaces[0]
+    marker: "[NEEDS HUMAN INPUT: prod workspace name]"
+    reason: "Workspace naming/domain/capacity reference are not stated."
+  - field: platform.storage.redundancy
+    marker: "[NEEDS HUMAN INPUT: ADLS Gen2 redundancy SKU]"
+    reason: "Only single-region baseline is stated."
+  - field: platform.identity.assignments
+    marker: "[NEEDS HUMAN INPUT: operator group]"
+    reason: "Operator group is not named."
+  - field: approval.approvedBy
+    marker: "[NEEDS HUMAN INPUT: named approver]"
+    reason: "Sources do not name approver."
