@@ -5,7 +5,7 @@ type: platform-design
 status: validated
 owner: platform-engineering
 relates_to: [PARENT-REQ-0005, PARENT-TS-0001, PARENT-DEL-0001, PARENT-DEL-0003, PARENT-DEL-0004]
-source: "Platform design proposal; approved by human on 2026-08-28"
+source: "Platform design proposal; approved by human on 2026-08-31"
 created: "2026-08-28"
 tags: [cost, monitoring, observability, cicd]
 ---

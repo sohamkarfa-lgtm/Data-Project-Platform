@@ -13,12 +13,15 @@ tags: [network, private-access, coexistence]
 ## Context
 The modernized Supply Chain flow must run in parallel with the existing
 on-premises mart until it is proven, while platform services require protected
-connectivity.
+connectivity. The validated design baseline assumes a hub-spoke topology, a
+new peered spoke VNet, centrally managed private DNS, and ExpressRoute-based
+on-premises coexistence.
 
 ## Decision
 Adopt private-by-default access with private endpoints for sensitive services,
-central private DNS, and approved secure connectivity to on-premises systems.
-Public access requires an explicitly documented exception.
+central private DNS managed by the network team, and the existing ExpressRoute
+circuit for on-premises data flows. Public access is restricted to explicitly
+approved exceptions only.
 
 ## Alternatives Considered
 - Public service endpoints — rejected as the default because they weaken the
@@ -26,6 +29,6 @@ Public access requires an explicitly documented exception.
 - Big-bang network migration — rejected because coexistence is required.
 
 ## Consequences
-The design supports defense in depth and parallel operation but depends on
-[NEEDS HUMAN INPUT: existing hub, firewall, DNS, and on-premises connectivity
-standards].
+The design supports defense in depth and parallel operation while aligning with
+existing enterprise network standards and coexistence requirements. It keeps the
+platform secure by default without disrupting the existing on-premises mart.

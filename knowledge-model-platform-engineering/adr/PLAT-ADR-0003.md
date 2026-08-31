@@ -12,12 +12,15 @@ tags: [entra-id, rbac, security]
 
 ## Context
 Platform access must use the existing Microsoft Entra ID identity system and
-support centrally managed role-based access for a small platform team.
+support centrally managed role-based access for a small platform team. The
+validated design reuses enterprise groups where possible and creates
+platform-specific admin and developer groups under central IAM ownership.
 
 ## Decision
 Map Entra ID groups to least-privilege Fabric workspace and Azure resource
-roles. Separate administrator, developer, operator, and consumer access, and
-use managed identities and approved secret management where supported.
+roles. Separate administrator, developer, operator, and consumer access, route
+access changes through the existing ITSM workflow, and use managed identities
+and Azure Key Vault for secrets management where supported.
 
 ## Alternatives Considered
 - Separate platform identity system — rejected because it duplicates identity
@@ -26,6 +29,7 @@ use managed identities and approved secret management where supported.
   weakens operational accountability.
 
 ## Consequences
-Access administration remains aligned with corporate identity governance, but
-the final mapping depends on [NEEDS HUMAN INPUT: group ownership, role mapping,
-and secrets rotation policy].
+Access administration remains aligned with corporate identity governance and
+uses the enterprise-approved group model. This keeps the operating model
+consistent while preserving least-privilege enforcement and secure secret
+handling.

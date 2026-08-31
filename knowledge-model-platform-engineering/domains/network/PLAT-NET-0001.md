@@ -5,7 +5,7 @@ type: platform-design
 status: validated
 owner: platform-engineering
 relates_to: [PARENT-ADR-0001, PARENT-TS-0001, PARENT-REQ-0003, PARENT-GOV-0001, PARENT-DEL-0004]
-source: "Platform design proposal; approved by human on 2026-08-28"
+source: "Platform design proposal; approved by human on 2026-08-31"
 created: "2026-08-28"
 tags: [private-access, connectivity, coexistence]
 ---
