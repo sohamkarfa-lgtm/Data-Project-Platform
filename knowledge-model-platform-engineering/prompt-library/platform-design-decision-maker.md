@@ -1,10 +1,10 @@
 # Prompt 00 — Platform Design Decision: Compute, Storage, Networking & Security (Approval-Gated)
 
 **Use when:** the Platform Engineering Lead has a validated target-state and
-platform ADR from the Parent Knowledge Model and needs to translate them into
-a concrete platform design — landing zone topology, compute
-sizing, storage layout, networking, and security — before any infrastructure
-is built.
+platform ADR from the Parent Knowledge Model or platform questionnaries answer from stakeholders 
+and needs to translate them into a concrete platform design 
+— landing zone topology, compute sizing, storage layout, networking, 
+and security — before any infrastructure is built.
 
 **Required context to attach:**
 - Parent repo: `https://github.com/sohamkarfa-lgtm/Data-Project-Knowledge-Model`
@@ -17,6 +17,7 @@ is built.
 - This repo's own `entities.index.yaml` (may be empty on first run) and its
   domain `_template.md` files (`landing-zone`, `compute`, `storage`,
   `network`, `identity-security`, `operations`)
+- This repo's own `open-questions\oq_ans`
 - Any known inputs not captured in the model yet: expected data volumes,
   concurrent user counts, budget ceiling, compliance/regulatory constraints
   (state explicitly if none apply)
@@ -50,6 +51,7 @@ CONTEXT PROVIDED:
 - Parent entities.index.yaml and schemas/entity-schema.yaml
 - This repo's entities.index.yaml (or state "empty — first run")
 - This repo's domain _template.md files
+- This repo's domain open questions answer files
 - KNOWN SIZING INPUTS: <<data volumes, user counts, budget ceiling,
   compliance constraints, or state "not yet known" per item>>
 

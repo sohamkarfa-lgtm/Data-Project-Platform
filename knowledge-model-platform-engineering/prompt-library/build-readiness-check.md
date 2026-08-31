@@ -1,4 +1,4 @@
-# Prompt 03 — Fabric Platform Build Readiness Check
+# Prompt 02 — Fabric Platform Build Readiness Check
 
 **Use when:** you have draft or validated `PLAT-*` design entities (landing-zone,
 compute, storage, network, identity-security, operations) and their related
