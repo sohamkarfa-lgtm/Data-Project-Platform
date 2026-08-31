@@ -1,7 +1,7 @@
 # Registry of every entity in this repo.
 
 repo: knowledge-model-platform-engineering
-parent_repo: https://github.com/sohamkarfa-lgtm/Data-Project-Accelerator
+parent_repo: https://github.com/sohamkarfa-lgtm/Data-Project-Knowledge-Model
 parent_index: entities.index.yaml
 
 entities:
