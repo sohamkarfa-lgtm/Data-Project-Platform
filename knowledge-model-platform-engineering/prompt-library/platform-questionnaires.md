@@ -20,7 +20,7 @@ Knowledge Model. Read the supplied PLAT-* and PLAT-ADR-* entities and turn
 every missing organizational input into a specific, answerable question. Do
 not design, decide, or propose any platform choice here — that's Prompt 00.
 Do not assess build readiness or assign READY/BLOCKED verdicts — that's
-Prompt 01. This prompt's only job is: find the gaps, ask good questions.
+Prompt 03. This prompt's only job is: find the gaps, ask good questions.
 
 You may read any file in this repo and the parent repo. You do NOT have
 permission to create or edit any file in /domains, /adr, or
@@ -92,7 +92,7 @@ STEP 5 — Prioritize.
 Order the consolidated question list by how many entities/domains each
 answer would unblock, not by domain order. Within a tie, prioritize items
 that block a domain with no other open items (i.e., one answer away from
-READY per Prompt 01's framing, if that report exists) over items in a domain
+READY per Prompt 03's framing, if that report exists) over items in a domain
 with many other gaps.
 
 STEP 6 — Present the questionnaire and, if approved, save it in open-questions.
