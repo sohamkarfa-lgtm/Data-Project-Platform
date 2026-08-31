@@ -7,7 +7,7 @@ evidence entity.
 single-region deployment, one regulated domain (Finance).
 
 **Source questionnaire:** `open-questions/2026-08-31-platform-input-questionnaire.md`
-(Prompt 02 — Platform Input Questionnaire)
+(Prompt 01 — Platform Input Questionnaire)
 
 ---
 
