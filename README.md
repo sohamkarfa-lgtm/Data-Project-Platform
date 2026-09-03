@@ -18,7 +18,9 @@ This repository links back to parent entities with `PARENT-*` IDs and keeps its 
 
 ```text
 /
+  AGENTS.md
   iac/
+    AGENTS.md
     modules/
       azure-landing-zone/
       storage/
@@ -35,6 +37,7 @@ This repository links back to parent entities with `PARENT-*` IDs and keeps its 
     PLATFORM_SPEC_MAPPING.md
     README.md
   knowledge-model-platform-engineering/
+    AGENTS.md
     domains/
       landing-zone/
       compute/
@@ -54,6 +57,21 @@ This repository links back to parent entities with `PARENT-*` IDs and keeps its 
       test.yaml
       prod.yaml
 ```
+
+## Agent Guidance
+
+`AGENTS.md` files are not required for the project to build, but they are useful
+for keeping coding-agent work consistent. This repository uses three instruction
+files:
+
+- [AGENTS.md](AGENTS.md) for repository-wide source-of-truth and workflow rules.
+- [knowledge-model-platform-engineering/AGENTS.md](knowledge-model-platform-engineering/AGENTS.md) for design entities, ADRs, approval status, and registry updates.
+- [iac/AGENTS.md](iac/AGENTS.md) for Azure, Microsoft Fabric, and Terraform implementation rules.
+
+No separate `platform-spec/AGENTS.md` is currently needed because `platform-spec/`
+is generated contract data governed by the root workflow. Add more nested
+instruction files only when a subdirectory has distinct build, validation,
+approval, or ownership rules.
 
 ## Knowledge Model
 

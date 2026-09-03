@@ -1,0 +1,63 @@
+# Generic frontmatter schema for every entity in the Knowledge Model platform engineering.
+# This is documentation of the convention, not a machine-enforced schema yet —
+# enforcing it (e.g. with a pre-commit hook or JSON Schema validator) is a
+# reasonable Milestone 2+ addition once the format has stabilized.
+
+title: Knowledge Model Platform Engineering Entity Frontmatter
+description: Generic YAML frontmatter schema for every entity in the platform engineering knowledge model.
+type: object
+additionalProperties: false
+required:
+  - id
+  - domain
+  - type
+  - status
+  - owner
+  - relates_to
+  - source
+  - created
+  - tags
+properties:
+  id:
+    type: string
+    pattern: "^(PLAT-[A-Z]+-[0-9]{4}|PARENT-[A-Z0-9-]+)$"
+    description: Unique entity identifier, or a reference to a parent-model entity.
+  domain:
+    type: string
+    minLength: 1
+    pattern: "^[a-z][a-z0-9-]*$"
+  type:
+    type: string
+    minLength: 1
+    pattern: "^[a-z][a-z0-9-]*$"
+  status:
+    type: string
+    enum:
+      - draft
+      - proposed
+      - validated
+      - deprecated
+  owner:
+    type: string
+    minLength: 1
+    pattern: "^[a-z][a-z0-9-]*$"
+  relates_to:
+    type: array
+    description: IDs of related entities, including entities in the parent model.
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+  source:
+    type: string
+    minLength: 1
+  created:
+    type: string
+    format: date
+  tags:
+    type: array
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+      pattern: "^[a-z0-9][a-z0-9-]*$"
