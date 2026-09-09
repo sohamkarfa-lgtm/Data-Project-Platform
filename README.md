@@ -8,6 +8,35 @@ The intended flow is:
 2. Generate a machine-readable contract in `platform-spec/`.
 3. Use the spec to fill or update the deployable Terraform boilerplate in `iac/`.
 
+Platform infrastructure requests enter through the
+[Fabric Platform Development Kit](fabric_platform_development_kit/README.md),
+which orchestrates this flow through seven approval-gated stages. Resume the
+relevant run from its manifest, or start Stage 1 if no relevant run exists.
+
+## Request Opening
+
+Use this opening for individual platform change requests:
+
+```text
+Use fabric_platform_development_kit to process this request.
+Treat "provision" as the desired outcome, not authorization for
+direct cloud execution.
+
+Resume the relevant run from its manifest; otherwise start Stage 1.
+Follow each stage's approval gate and preserve the existing project
+structure. Start by reporting the run ID, active stage and permitted
+actions.
+
+Requirement:
+<client, environment, scope, sizing inputs and entity references>
+```
+
+The root [AGENTS.md](AGENTS.md) applies this routing even when a request does
+not name the kit. A stage approval applies to that stage only. The kit produces
+a deployment-readiness package; live deployment is a separate human action
+after readiness approval. Azure CLI, REST, SDK and portal actions must not be
+used to bypass this boundary.
+
 ## Repository Relationship
 
 The platform model is a child knowledge model of [Data-Project-Knowledge-Model](https://github.com/sohamkarfa-lgtm/Data-Project-Knowledge-Model). The parent repository remains the source of enterprise context, requirements, target-state architecture, governance, delivery milestones, and architecture decisions.
@@ -19,6 +48,14 @@ This repository links back to parent entities with `PARENT-*` IDs and keeps its 
 ```text
 /
   AGENTS.md
+  fabric_platform_development_kit/
+    AGENTS.md
+    README.md
+    workflow.yaml
+    config/
+    stages/
+    templates/
+    runs/
   iac/
     AGENTS.md
     modules/
@@ -61,12 +98,13 @@ This repository links back to parent entities with `PARENT-*` IDs and keeps its 
 ## Agent Guidance
 
 `AGENTS.md` files are not required for the project to build, but they are useful
-for keeping coding-agent work consistent. This repository uses three instruction
+for keeping coding-agent work consistent. This repository uses four instruction
 files:
 
 - [AGENTS.md](AGENTS.md) for repository-wide source-of-truth and workflow rules.
 - [knowledge-model-platform-engineering/AGENTS.md](knowledge-model-platform-engineering/AGENTS.md) for design entities, ADRs, approval status, and registry updates.
 - [iac/AGENTS.md](iac/AGENTS.md) for Azure, Microsoft Fabric, and Terraform implementation rules.
+- [fabric_platform_development_kit/AGENTS.md](fabric_platform_development_kit/AGENTS.md) for sequential stages, permitted actions, and approval bookkeeping.
 
 No separate `platform-spec/AGENTS.md` is currently needed because `platform-spec/`
 is generated contract data governed by the root workflow. Add more nested
@@ -123,7 +161,8 @@ Each environment folder contains a root Terraform configuration plus examples:
 - `backend.tf.example` for remote state configuration
 - `terraform.tfvars.example` for environment inputs
 
-Typical workflow:
+After Stage 7 readiness approval, the human deployment operator replaces the
+example values and uses the following starting workflow outside the kit:
 
 ```powershell
 cd iac/environments/dev
@@ -137,11 +176,12 @@ Replace example values before running `apply`, especially subscription IDs, tena
 
 ## Change Workflow
 
-1. Update the knowledge model only through the approval-gated prompts in `knowledge-model-platform-engineering/prompt-library/`.
-2. Regenerate `platform-spec/` from validated entities and approved answer files.
-3. Review spec changes before writing them.
-4. Use the spec mapping to update environment variables or Terraform configuration.
-5. Run Terraform formatting, validation, and plan in the target environment.
-6. Keep implementation changes traceable to `PLAT-*` and `PLAT-ADR-*` entity IDs.
+1. Enter or resume the kit run using [workflow.yaml](fabric_platform_development_kit/workflow.yaml) and its manifest. Follow stage-specific read/write permissions and approval gates.
+2. Complete Requirement Analysis, Current State Assessment, Gap Analysis, and Solution Design in order, with approval at each boundary.
+3. If design entities need changes, use the approval-gated prompts in `knowledge-model-platform-engineering/prompt-library/` through the kit; preserve their own gates.
+4. In Stage 5, propose the contract and Terraform changes using the approved design and spec mapping. Write only approved file contents within the approved scope, preferring existing files.
+5. Complete Stage 6 validation and Stage 7 deployment-readiness review. Keep missing inputs and failed checks explicit; the kit does not run real-credential plan/apply or other cloud mutations.
+6. After readiness approval, hand off deployment to the human operator following [iac/README.md](iac/README.md).
+7. Keep changes traceable to the run's approved artifacts and `PLAT-*` / `PLAT-ADR-*` entity IDs.
 
 See [knowledge-model-platform-engineering/README.md](knowledge-model-platform-engineering/README.md) for the domain conventions and [iac/README.md](iac/README.md) for Terraform implementation details.
