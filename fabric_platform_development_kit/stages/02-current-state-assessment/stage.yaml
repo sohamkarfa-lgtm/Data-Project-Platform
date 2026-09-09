@@ -1,0 +1,50 @@
+stage:
+  id: 2
+  key: current-state-assessment
+  name: Current State Assessment
+  purpose: >
+    Inventory the current Fabric platform implementation relevant to the
+    approved requirement: validated design entities, the generated spec,
+    and the deployed/deployable IaC — so Stage 3 can compare like-for-like.
+
+inputs:
+  required:
+    - runs/<run_id>/01-requirement-analysis.md (status: approved)
+  reads:
+    - knowledge-model-platform-engineering/entities.index.yaml
+    - knowledge-model-platform-engineering/domains/**/PLAT-*.md
+    - knowledge-model-platform-engineering/adr/PLAT-ADR-*.md
+    - platform-spec/organization.yaml
+    - platform-spec/environments/*.yaml
+    - iac/ (module and environment structure, terraform.tfvars.example files)
+    - open-questions/oq_ans/*.md   # answered organizational inputs, if relevant
+
+writes:
+  - fabric_platform_development_kit/runs/<run_id>/02-current-state-assessment.md
+
+prohibited:
+  - Comparing against the requirement (that is Stage 3's job — this stage
+    describes what exists, not what's missing)
+  - Proposing any change
+  - Editing any PLAT-*, PLAT-ADR-*, platform-spec, or iac file
+
+output_schema:
+  frontmatter:
+    - run_id
+    - stage: current-state-assessment
+    - status
+    - approved_by
+    - approved_at
+    - created
+  sections:
+    - Scope of assessment (which domains, tied to Stage 1's impacted components)
+    - Platform inventory (PLAT-* / PLAT-ADR-* entities in scope, with status)
+    - Spec state (platform-spec/ fields relevant to scope, resolved vs
+      [NEEDS HUMAN INPUT])
+    - IaC state (which iac/ modules and environment files already cover this scope)
+    - Architecture summary (neutral, factual — no evaluation against the requirement)
+    - Known open items already on record (from open-questions/, build-readiness/)
+
+requires_human_approval: true
+previous_stage: requirement-analysis
+next_stage: gap-analysis

@@ -1,0 +1,67 @@
+# Schema/template for a single run's manifest. Copy this (along with the
+# rest of runs/_template/) to runs/<run_id>/manifest.yaml when starting a
+# new run, and fill in the top-level fields immediately.
+#
+# A stage may only be started once the immediately preceding stage's
+# `status` is `approved`. `status` values: pending | in_progress |
+# changes_requested | approved.
+
+run_id: "<YYYY-MM-DD>-<change-slug>"
+title: "<one-line description of the change or setup>"
+created: "<YYYY-MM-DD>"
+requested_by: "<name/role>"
+run_status: pending   # pending | in_progress | complete | abandoned
+
+stages:
+  requirement-analysis:
+    order: 1
+    file: 01-requirement-analysis.md
+    status: pending
+    approved_by: null
+    approved_at: null
+
+  current-state-assessment:
+    order: 2
+    file: 02-current-state-assessment.md
+    status: pending
+    approved_by: null
+    approved_at: null
+
+  gap-analysis:
+    order: 3
+    file: 03-gap-analysis.md
+    status: pending
+    approved_by: null
+    approved_at: null
+
+  solution-design:
+    order: 4
+    file: 04-solution-design.md
+    status: pending
+    approved_by: null
+    approved_at: null
+
+  iac-development:
+    order: 5
+    file: 05-iac-development.md
+    status: pending
+    approved_by: null
+    approved_at: null
+    files_written: []   # populated once approved, e.g. platform-spec/environments/dev.yaml
+
+  validation-testing:
+    order: 6
+    file: 06-validation-testing.md
+    status: pending
+    approved_by: null
+    approved_at: null
+    verdict: null   # PASS | PASS WITH FINDINGS | BLOCKED
+
+  deployment-readiness:
+    order: 7
+    file: 07-deployment-readiness.md
+    status: pending
+    approved_by: null
+    approved_at: null
+
+notes: ""

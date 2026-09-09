@@ -1,0 +1,45 @@
+stage:
+  id: 3
+  key: gap-analysis
+  name: Gap Analysis
+  purpose: >
+    Compare the approved requirement against the approved current-state
+    assessment to identify missing capabilities, required configuration
+    changes, and architectural impact — without yet proposing how to close
+    any gap.
+
+inputs:
+  required:
+    - runs/<run_id>/01-requirement-analysis.md (status: approved)
+    - runs/<run_id>/02-current-state-assessment.md (status: approved)
+  reads: []
+  # Stage 3 works only from the two approved upstream artifacts. If it needs
+  # to re-check a specific entity/spec/iac fact, it should note the fact as
+  # missing rather than re-reading the repo broadly — that keeps the gap
+  # analysis strictly traceable to the two approved inputs.
+
+writes:
+  - fabric_platform_development_kit/runs/<run_id>/03-gap-analysis.md
+
+prohibited:
+  - Proposing an implementation approach (that is Stage 4)
+  - Editing any PLAT-*, PLAT-ADR-*, platform-spec, or iac file
+
+output_schema:
+  frontmatter:
+    - run_id
+    - stage: gap-analysis
+    - status
+    - approved_by
+    - approved_at
+    - created
+  sections:
+    - Gap register (requirement item vs current-state coverage vs gap type)
+    - Architectural impact
+    - Risks and dependencies introduced by closing each gap
+    - Items requiring [NEEDS HUMAN INPUT] before design can start
+    - Items with no gap (already satisfied — listed for completeness)
+
+requires_human_approval: true
+previous_stage: current-state-assessment
+next_stage: solution-design

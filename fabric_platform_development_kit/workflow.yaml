@@ -1,0 +1,134 @@
+# Fabric Platform Development Kit — master orchestration definition.
+# This file is the machine-readable source of truth for stage order,
+# chaining, and approval gates. stages/<NN-name>/stage.yaml files hold the
+# per-stage detail (allowed read/write scope, artifact schema); this file
+# holds only the chain itself.
+
+kit: fabric_platform_development_kit
+version: "1.0.0"
+
+execution_model: sequential-chained
+# sequential-chained: stage N+1 may only start once stage N's manifest
+# entry is "approved". Each stage's declared input is the prior stage's
+# approved output file, not the original raw request.
+
+run_root: fabric_platform_development_kit/runs
+run_id_pattern: "<YYYY-MM-DD>-<change-slug>"
+manifest_file: manifest.yaml
+
+global_rules:
+  - No stage may be skipped, reordered, or merged with another stage.
+  - No stage may begin until the manifest shows the previous stage as approved.
+  - Every stage output is a single Markdown file with YAML frontmatter,
+    written to runs/<run_id>/<NN-stage-name>.md.
+  - Only Stage 5 (iac-development) may write outside the run folder, and
+    only into platform-spec/ or iac/, and only after Stage 4 is approved.
+  - No file under /domains, /adr, or entities.index.yaml (parent or child
+    repo) is ever modified by this kit. Design-entity changes go through
+    knowledge-model-platform-engineering/prompt-library/ Prompt 00, invoked
+    from within Stage 4, with its own approval gate honored independently.
+  - terraform plan/apply are never executed by this kit; Stage 7 hands off
+    a reviewed package for the human to act on via iac/README.md.
+  - Unresolved facts use "[NEEDS HUMAN INPUT: ...]"; contradictions use
+    "[CONFLICT NEEDS HUMAN RESOLUTION]" — never silently guessed or resolved.
+
+stages:
+  - id: 1
+    key: requirement-analysis
+    name: Requirement Analysis
+    path: stages/01-requirement-analysis
+    input:
+      - Business requirement / change request (human-provided)
+      - Relevant PARENT-* and PLAT-* entities (if the change references them)
+    output: runs/<run_id>/01-requirement-analysis.md
+    requires_human_approval: true
+    next: current-state-assessment
+
+  - id: 2
+    key: current-state-assessment
+    name: Current State Assessment
+    path: stages/02-current-state-assessment
+    input:
+      - runs/<run_id>/01-requirement-analysis.md (approved)
+      - knowledge-model-platform-engineering/entities.index.yaml
+      - knowledge-model-platform-engineering/domains/**/PLAT-*.md
+      - knowledge-model-platform-engineering/adr/PLAT-ADR-*.md
+      - platform-spec/organization.yaml
+      - platform-spec/environments/*.yaml
+      - iac/ (structure and current .tf / .tfvars.example only)
+    output: runs/<run_id>/02-current-state-assessment.md
+    requires_human_approval: true
+    previous: requirement-analysis
+    next: gap-analysis
+
+  - id: 3
+    key: gap-analysis
+    name: Gap Analysis
+    path: stages/03-gap-analysis
+    input:
+      - runs/<run_id>/01-requirement-analysis.md (approved)
+      - runs/<run_id>/02-current-state-assessment.md (approved)
+    output: runs/<run_id>/03-gap-analysis.md
+    requires_human_approval: true
+    previous: current-state-assessment
+    next: solution-design
+
+  - id: 4
+    key: solution-design
+    name: Solution Design & Planning
+    path: stages/04-solution-design
+    input:
+      - runs/<run_id>/03-gap-analysis.md (approved)
+    may_invoke:
+      - knowledge-model-platform-engineering/prompt-library/platform-design-decision-maker.md
+      - knowledge-model-platform-engineering/prompt-library/platform-questionnaires.md
+    output: runs/<run_id>/04-solution-design.md
+    requires_human_approval: true
+    previous: gap-analysis
+    next: iac-development
+
+  - id: 5
+    key: iac-development
+    name: IaC Development / Modification
+    path: stages/05-iac-development
+    input:
+      - runs/<run_id>/04-solution-design.md (approved)
+    may_invoke:
+      - knowledge-model-platform-engineering/prompt-library/platform-spec-generator.md
+      - knowledge-model-platform-engineering/prompt-library/platform-spec-to-terraform-variables.md
+    output: runs/<run_id>/05-iac-development.md
+    write_scope_after_approval:
+      - platform-spec/organization.yaml
+      - platform-spec/environments/*.yaml
+      - iac/environments/*/terraform.tfvars
+      - iac/modules/** (new or modified modules, only if named in Stage 4)
+    requires_human_approval: true
+    previous: solution-design
+    next: validation-testing
+
+  - id: 6
+    key: validation-testing
+    name: Validation & Testing
+    path: stages/06-validation-testing
+    input:
+      - runs/<run_id>/05-iac-development.md (approved)
+    may_invoke:
+      - knowledge-model-platform-engineering/prompt-library/build-readiness-check.md
+    output: runs/<run_id>/06-validation-testing.md
+    requires_human_approval: true
+    previous: iac-development
+    next: deployment-readiness
+
+  - id: 7
+    key: deployment-readiness
+    name: Deployment Readiness Review
+    path: stages/07-deployment-readiness
+    input:
+      - runs/<run_id>/01-requirement-analysis.md (approved)
+      - runs/<run_id>/04-solution-design.md (approved)
+      - runs/<run_id>/05-iac-development.md (approved)
+      - runs/<run_id>/06-validation-testing.md (approved)
+    output: runs/<run_id>/07-deployment-readiness.md
+    requires_human_approval: true
+    previous: validation-testing
+    next: null

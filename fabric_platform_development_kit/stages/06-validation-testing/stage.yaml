@@ -1,0 +1,56 @@
+stage:
+  id: 6
+  key: validation-testing
+  name: Validation & Testing
+  purpose: >
+    Validate the Stage 5 output against policy, security, dependency,
+    standards, and the specific checks Stage 4 called out — before any
+    deployment readiness sign-off.
+
+inputs:
+  required:
+    - runs/<run_id>/05-iac-development.md (status: approved)
+
+reads:
+  - runs/<run_id>/04-solution-design.md   # for the "Validation strategy" section
+  - knowledge-model-platform-engineering/entities.index.yaml
+  - knowledge-model-platform-engineering/adr/PLAT-ADR-*.md
+  - platform-spec/organization.yaml
+  - platform-spec/environments/*.yaml
+  - iac/**  (the files Stage 5 wrote, plus surrounding module/variable definitions)
+
+may_invoke:
+  - knowledge-model-platform-engineering/prompt-library/build-readiness-check.md
+    # to formally re-assess domain readiness after Stage 5's changes
+
+writes:
+  - fabric_platform_development_kit/runs/<run_id>/06-validation-testing.md
+
+prohibited:
+  - Modifying any file Stage 5 wrote (fixes go back through Stage 5, not
+    silently patched here)
+  - Marking a blocking finding as resolved without human sign-off in Stage 7
+  - Running terraform plan or apply against real credentials
+
+output_schema:
+  frontmatter:
+    - run_id
+    - stage: validation-testing
+    - status
+    - approved_by
+    - approved_at
+    - created
+  sections:
+    - Validation scope (files/domains checked)
+    - Policy and standards checks (CAF/WAF alignment, entity-schema conformance)
+    - Security checks (least privilege, public access posture, secrets handling)
+    - Dependency checks (entities.index.yaml consistency, relates_to /
+      relationships resolve, cross-repo PARENT-* links resolve)
+    - Stage-4-specific checks (from Stage 4's "Validation strategy" section)
+    - Findings register (severity, blocking yes/no)
+    - Remediation recommendations
+    - Overall verdict (pass / pass with findings / blocked)
+
+requires_human_approval: true
+previous_stage: iac-development
+next_stage: deployment-readiness

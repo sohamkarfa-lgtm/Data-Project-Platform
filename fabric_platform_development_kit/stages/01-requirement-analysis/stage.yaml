@@ -1,0 +1,53 @@
+stage:
+  id: 1
+  key: requirement-analysis
+  name: Requirement Analysis
+  purpose: >
+    Understand the business/technical requirement or change request, its
+    scope and constraints, and capture assumptions and open questions before
+    any design or implementation work begins.
+
+inputs:
+  required:
+    - Business requirement or change request, as stated by the human
+  optional:
+    - Relevant PARENT-* entities (parent knowledge model)
+    - Relevant PLAT-* / PLAT-ADR-* entities (this repo's knowledge model)
+    - Prior meeting summaries or transcripts, if the requirement originates
+      from one
+
+reads:
+  - knowledge-model-platform-engineering/entities.index.yaml
+  - knowledge-model-platform-engineering/domains/**/PLAT-*.md   # for context only
+  - knowledge-model-platform-engineering/adr/PLAT-ADR-*.md      # for context only
+
+writes:
+  - fabric_platform_development_kit/runs/<run_id>/01-requirement-analysis.md
+
+prohibited:
+  - Proposing an implementation approach (that is Stage 4)
+  - Assessing the current platform in detail (that is Stage 2)
+  - Creating or editing any PLAT-*, PLAT-ADR-*, platform-spec, or iac file
+
+output_schema:
+  frontmatter:
+    - run_id
+    - stage: requirement-analysis
+    - status            # pending | changes_requested | approved
+    - approved_by
+    - approved_at
+    - source            # who/what raised the requirement
+    - created
+  sections:
+    - Business objective
+    - Functional requirements
+    - Non-functional requirements
+    - Impacted platform components (landing-zone / compute / storage /
+      network / identity-security / operations — cite PLAT-* ids if known)
+    - Assumptions
+    - Open questions / [NEEDS HUMAN INPUT: ...]
+    - Risks
+    - Out of scope (explicit exclusions)
+
+requires_human_approval: true
+next_stage: current-state-assessment

@@ -1,0 +1,73 @@
+# Kit-wide configuration: repository linkage, approval policy, and the
+# explicit read/write allow-list every stage must respect. Individual
+# stages may narrow this further in their own stage.yaml; none may widen it.
+
+kit: fabric_platform_development_kit
+schema_version: "1.0.0"
+
+repository_linkage:
+  this_repo: Data-Project-Platform
+  parent_repo:
+    name: Data-Project-Knowledge-Model
+    url: https://github.com/sohamkarfa-lgtm/Data-Project-Knowledge-Model
+    entities_index: entities.index.yaml   # path relative to parent repo root
+  knowledge_model_path: knowledge-model-platform-engineering
+  spec_path: platform-spec
+  iac_path: iac
+
+approval_policy:
+  mode: explicit-human-approval-per-stage
+  # No stage's output is ever auto-approved, regardless of validation
+  # results, confidence, or urgency stated in the request.
+  approval_fields_required:
+    - approved_by
+    - approved_at
+    - stage_key
+  rejection_behavior: revise-in-place
+  # A rejected or edit-requested stage output is revised in the same file;
+  # it does not create a new file or advance run state.
+
+read_allow_list:
+  - knowledge-model-platform-engineering/**
+  - platform-spec/**
+  - iac/**  # read-only for structure/context in Stages 1-4 and 6-7
+  - README.md
+  - AGENTS.md
+  - fabric_platform_development_kit/**
+
+write_allow_list_by_stage:
+  requirement-analysis: [ "fabric_platform_development_kit/runs/<run_id>/01-requirement-analysis.md" ]
+  current-state-assessment: [ "fabric_platform_development_kit/runs/<run_id>/02-current-state-assessment.md" ]
+  gap-analysis: [ "fabric_platform_development_kit/runs/<run_id>/03-gap-analysis.md" ]
+  solution-design: [ "fabric_platform_development_kit/runs/<run_id>/04-solution-design.md" ]
+  iac-development:
+    - "fabric_platform_development_kit/runs/<run_id>/05-iac-development.md"
+    - "platform-spec/organization.yaml"          # only after Stage 4 approval
+    - "platform-spec/environments/*.yaml"         # only after Stage 4 approval
+    - "iac/environments/*/terraform.tfvars"       # only after Stage 4 approval
+    - "iac/modules/**"                            # only if named in Stage 4, new or modified
+  validation-testing: [ "fabric_platform_development_kit/runs/<run_id>/06-validation-testing.md" ]
+  deployment-readiness: [ "fabric_platform_development_kit/runs/<run_id>/07-deployment-readiness.md" ]
+
+never_write:
+  - domains/**                # parent repo
+  - adr/**                    # parent repo
+  - entities.index.yaml       # parent repo
+  - knowledge-model-platform-engineering/domains/**
+  - knowledge-model-platform-engineering/adr/**
+  - knowledge-model-platform-engineering/entities.index.yaml
+  # Design-entity changes only ever happen via
+  # knowledge-model-platform-engineering/prompt-library/platform-design-decision-maker.md,
+  # invoked as a sub-step of Stage 4, under that prompt's own approval gate.
+
+deployment_actions:
+  terraform_plan: never-executed-by-kit
+  terraform_apply: never-executed-by-kit
+  rationale: >
+    Stage 7 produces a reviewed, traceable package. The human runs
+    terraform plan/apply themselves per iac/README.md, outside this kit,
+    once Stage 7 is approved.
+
+naming:
+  run_id_pattern: "<YYYY-MM-DD>-<change-slug>"
+  slug_rules: lowercase, hyphen-separated, no repeated hyphens

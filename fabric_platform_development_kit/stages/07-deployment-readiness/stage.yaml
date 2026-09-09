@@ -1,0 +1,50 @@
+stage:
+  id: 7
+  key: deployment-readiness
+  name: Deployment Readiness Review
+  purpose: >
+    Confirm the full run — requirement through validation — is internally
+    consistent and complete, and produce the final approval package the
+    human uses to run terraform plan/apply themselves outside this kit.
+
+inputs:
+  required:
+    - runs/<run_id>/01-requirement-analysis.md (status: approved)
+    - runs/<run_id>/04-solution-design.md (status: approved)
+    - runs/<run_id>/05-iac-development.md (status: approved)
+    - runs/<run_id>/06-validation-testing.md (status: approved)
+
+reads: []
+# Stage 7 is a synthesis stage. It works only from the four approved
+# upstream artifacts named above (plus the run manifest for status
+# confirmation) — it does not re-read the repo directly.
+
+writes:
+  - fabric_platform_development_kit/runs/<run_id>/07-deployment-readiness.md
+
+prohibited:
+  - Approving deployment when Stage 6's verdict was BLOCKED and no
+    subsequent re-validation cleared it
+  - Editing any file from an earlier stage
+  - Running terraform plan or apply
+
+output_schema:
+  frontmatter:
+    - run_id
+    - stage: deployment-readiness
+    - status
+    - approved_by
+    - approved_at
+    - created
+  sections:
+    - Traceability chain (Stage 1 requirement -> Stage 4 design -> Stage 5
+      files -> Stage 6 validation, one row per requirement item)
+    - Deployment readiness checklist
+    - Outstanding items (non-blocking findings accepted as known risk, with
+      explicit human sign-off recorded)
+    - Final approval package summary (files changed, environments affected,
+      next manual step per iac/README.md)
+
+requires_human_approval: true
+previous_stage: validation-testing
+next_stage: null

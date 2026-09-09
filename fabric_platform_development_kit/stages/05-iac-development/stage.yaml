@@ -1,0 +1,66 @@
+stage:
+  id: 5
+  key: iac-development
+  name: IaC Development / Modification
+  purpose: >
+    Execute the approved modular task breakdown from Stage 4: create or
+    update platform-spec/ and iac/ artifacts exactly as designed, with no
+    new design decisions made at this stage.
+
+inputs:
+  required:
+    - runs/<run_id>/04-solution-design.md (status: approved)
+
+reads:
+  - platform-spec/organization.yaml
+  - platform-spec/environments/*.yaml
+  - iac/environments/*/variables.tf
+  - iac/environments/*/terraform.tfvars.example
+  - iac/modules/**
+  - iac/PLATFORM_SPEC_MAPPING.md
+
+may_invoke:
+  - knowledge-model-platform-engineering/prompt-library/platform-spec-generator.md
+    # when Stage 4 approved a PLAT-* change that must first regenerate
+    # platform-spec/ before Terraform variables can be updated
+  - knowledge-model-platform-engineering/prompt-library/platform-spec-to-terraform-variables.md
+    # to translate the (possibly just-regenerated) spec into terraform.tfvars
+
+writes_after_approval_only:
+  - platform-spec/organization.yaml
+  - platform-spec/environments/*.yaml
+  - iac/environments/*/terraform.tfvars
+  - iac/modules/**   # only modules explicitly named in Stage 4's task breakdown
+
+writes_always:
+  - fabric_platform_development_kit/runs/<run_id>/05-iac-development.md
+
+prohibited:
+  - Writing to any file not named in Stage 4's modular task breakdown
+  - Making a design decision not already present in Stage 4's output
+  - Writing directly to iac/environments/*/terraform.tfvars without going
+    through platform-spec-to-terraform-variables.md's own mapping and
+    approval step, unless Stage 4 explicitly scoped a direct .tf change
+  - Running terraform plan or apply
+  - Committing secrets, real subscription/tenant/principal IDs, or backend
+    state configuration
+
+output_schema:
+  frontmatter:
+    - run_id
+    - stage: iac-development
+    - status
+    - approved_by
+    - approved_at
+    - created
+  sections:
+    - Tasks executed (mapped 1:1 to Stage 4's task breakdown)
+    - Files created or modified (with diffs or full content)
+    - Sub-prompts invoked and their approval status
+    - Deviations from Stage 4 (should be empty; if not, explain and flag
+      for re-approval)
+    - Residual [NEEDS HUMAN INPUT] markers carried into the new files
+
+requires_human_approval: true
+previous_stage: solution-design
+next_stage: validation-testing

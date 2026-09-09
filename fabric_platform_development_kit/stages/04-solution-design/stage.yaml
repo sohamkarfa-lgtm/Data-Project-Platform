@@ -1,0 +1,56 @@
+stage:
+  id: 4
+  key: solution-design
+  name: Solution Design & Planning
+  purpose: >
+    Turn the approved gap register into a concrete implementation approach:
+    architecture updates, deployment strategy, and a modular task breakdown
+    that Stage 5 can execute without re-deciding anything.
+
+inputs:
+  required:
+    - runs/<run_id>/03-gap-analysis.md (status: approved)
+  reads:
+    - knowledge-model-platform-engineering/domains/**/_template.md
+    - knowledge-model-platform-engineering/adr/_template.md
+    - knowledge-model-platform-engineering/schemas/entity-schema.yaml
+    - iac/modules/**  (to check for reusable modules before proposing new ones)
+    - iac/PLATFORM_SPEC_MAPPING.md
+
+may_invoke:
+  - knowledge-model-platform-engineering/prompt-library/platform-design-decision-maker.md
+    # when the gap register requires new/changed PLAT-* or PLAT-ADR-*
+    # entities. That prompt's own approval gate must be honored
+    # independently; its approved output becomes an input this stage cites.
+  - knowledge-model-platform-engineering/prompt-library/platform-questionnaires.md
+    # when a gap surfaced open organizational inputs that block a design
+    # decision.
+
+writes:
+  - fabric_platform_development_kit/runs/<run_id>/04-solution-design.md
+
+prohibited:
+  - Writing or editing any platform-spec or iac file (that is Stage 5)
+  - Marking any invoked sub-prompt's proposed entity as validated without
+    that sub-prompt's own human approval step having occurred
+
+output_schema:
+  frontmatter:
+    - run_id
+    - stage: solution-design
+    - status
+    - approved_by
+    - approved_at
+    - created
+  sections:
+    - Design proposal (per gap, per domain)
+    - Architecture updates (new/changed PLAT-*, PLAT-ADR-* — draft only,
+      pending their own prompt's approval)
+    - Deployment strategy (which environments, sequencing, rollback posture)
+    - Modular task breakdown (each task scoped to one Stage 5 execution unit)
+    - Validation strategy (what Stage 6 must check for this specific change)
+    - Explicit reuse check (existing iac/modules/* considered before any new module)
+
+requires_human_approval: true
+previous_stage: gap-analysis
+next_stage: iac-development
